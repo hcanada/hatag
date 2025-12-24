@@ -4,11 +4,11 @@ import NavBarMenu from "./NavBarMenu";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function NavBar() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
-  } = await (await supabase).auth.getUser();
+  } = await supabase.auth.getUser();
   console.log("Current user:", user);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 dark:bg-[#18191A] backdrop-blur-sm">
