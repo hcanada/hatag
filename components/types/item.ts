@@ -18,7 +18,7 @@ export interface Item {
   title: string;
   description: string;
   category: string;
-  images: string;
+  images: string[];
   profiles: Profile;
   barangay: string;
   created_at: Date;
