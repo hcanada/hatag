@@ -19,9 +19,10 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
   const { data, error } = await supabase
     .from("items")
     .select("*,profiles(*),claims(*)")
-    .eq("id", item_id);
+    .eq("id", item_id)
+    .single();
   if (error) return;
-  if (user?.id === data[0].user_id) isOwner = true;
+  if (user?.id === data.user_id) isOwner = true;
   return (
     <main>
       {/* Page container */}
@@ -30,7 +31,7 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 ">
           {/* LEFT: Images */}
           <div className="h-96">
-            <CarouselPhoto images={data[0].images} title={data[0].title} />
+            <CarouselPhoto images={data.images} title={data.title} />
           </div>
 
           {/* RIGHT: Details card */}
@@ -39,25 +40,25 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
               {/* Title + Status */}
               <div className="flex justify-between gap-4">
                 <h1 className="text-2xl font-semibold leading-tight">
-                  {data[0].title}
+                  {data.title}
                 </h1>
-                <StatusBadge status={data[0].status} />
+                <StatusBadge status={data.status} />
               </div>
 
               {/* Meta */}
               <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin size={15} />
                 <span>
-                  {data[0].barangay}, {data[0].city}
+                  {data.barangay}, {data.city}
                 </span>
                 <span>•</span>
-                <span>Posted {getDateFromNow(data[0].created_at)}</span>
+                <span>Posted {getDateFromNow(data.created_at)}</span>
               </div>
 
               {/* Description */}
               <div className="mt-6">
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground ">
-                  {data[0].description}
+                  {data.description}
                 </p>
               </div>
 
@@ -67,11 +68,10 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
                   <div className="h-10 w-10 rounded-full bg-muted" />
                   <div>
                     <p className="text-sm font-semibold capitalize">
-                      {data[0].profiles.first_name} {data[0].profiles.last_name}
+                      {data.profiles.first_name} {data.profiles.last_name}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Member since{" "}
-                      {formatMonthYear(data[0].profiles.created_at)}
+                      Member since {formatMonthYear(data.profiles.created_at)}
                     </p>
                   </div>
                 </div>
@@ -82,7 +82,7 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
 
               {/* Claim section */}
               <div className="mt-6">
-                <ClaimButton data={data[0]} isOwner={isOwner} />
+                <ClaimButton data={data} isOwner={isOwner} />
               </div>
             </div>
           </div>
