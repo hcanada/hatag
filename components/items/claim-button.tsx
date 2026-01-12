@@ -86,7 +86,7 @@ export default function ClaimButton({
               {/* Edit & Delete Buttons */}
               <div className="flex gap-2 my-2">
                 <Button variant="secondary" className="flex-1" asChild>
-                  <Link href={`/edit-item/${data.id}`}>
+                  <Link href={`/items/${data.id}/edit`}>
                     <Edit className="h-5 w-5" />
                     Edit Item
                   </Link>
