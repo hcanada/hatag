@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 // Handle POST request
+
 export async function POST(req: Request) {
   const formData = await req.formData();
   const supabase = await createClient();
@@ -51,8 +52,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(
-    { message: "POST request received" },
-    { status: 200 }
-  );
+  return NextResponse.json({ message: "success" }, { status: 200 });
 }
