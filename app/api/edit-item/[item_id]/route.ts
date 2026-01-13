@@ -57,6 +57,7 @@ export async function PATCH(
       city,
       barangay,
       images: finalImages,
+      updated_at: new Date(),
     })
     .eq("id", item_id);
 
