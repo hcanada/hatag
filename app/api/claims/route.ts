@@ -17,11 +17,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // const { error } = await supabase
-  //   .from("items")
-  //   .update({ status: "reserved", claimed_by: claimed_by })
-  //   .eq("id", id);
-
   const { error } = await supabase
     .from("claims")
     .insert({ item_id, user_id: user.id, status: "pending" });
