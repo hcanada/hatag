@@ -9,8 +9,19 @@ import { ImageIcon, LoaderCircle, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Item } from "../types/item";
+import { useRouter } from "next/navigation";
 
 export default function EditItemForm({ item }: { item: Item }) {
+  const router = useRouter();
+  const [original] = useState(() => ({
+    title: item.title,
+    description: item.description,
+    category: item.category,
+    city: item.city,
+    barangay: item.barangay,
+    images: item.images,
+  }));
+
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: item.title,
@@ -20,13 +31,26 @@ export default function EditItemForm({ item }: { item: Item }) {
     barangay: item.barangay,
   });
 
-  const [files, setFiles] = useState<File[]>([]);
-
   const [existingImages, setExistingImages] = useState<string[]>(
     item.images // array of URLs
   );
+  const [files, setFiles] = useState<File[]>([]);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  function arraysEqual(a: string[], b: string[]) {
+    if (a.length !== b.length) return false;
+    return a.every((val, index) => val === b[index]);
+  }
+
+  const hasChanges =
+    form.title !== original.title ||
+    form.description !== original.description ||
+    form.category !== original.category ||
+    form.city !== original.city ||
+    form.barangay !== original.barangay ||
+    !arraysEqual(existingImages, original.images) ||
+    files.length > 0;
+
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles: File[] = Array.from(e.currentTarget.files ?? []);
@@ -113,20 +137,15 @@ export default function EditItemForm({ item }: { item: Item }) {
       method: "PATCH",
       body: formData,
     });
-    if (!res.ok) {
+    if (res.ok) {
+      toast.success("Item edited successfully");
       setLoading(false);
-      return;
+      router.push(`/items/${item.id}`);
     }
-    setForm({
-      title: "",
-      description: "",
-      category: "",
-      city: "",
-      barangay: "",
+
+    toast.warning("Something went wrong!", {
+      duration: 5000,
     });
-    setFiles([]);
-    setExistingImages([]);
-    setPreviewUrls([]);
     setLoading(false);
   }
 
@@ -243,7 +262,7 @@ export default function EditItemForm({ item }: { item: Item }) {
                 )}
               </div>
             </div>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !hasChanges}>
               {loading ? (
                 <>
                   <LoaderCircle className="animate-spin" /> Uploading...
