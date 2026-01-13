@@ -21,6 +21,7 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
     .select("*,profiles(*),claims(*)")
     .eq("id", item_id)
     .single();
+  if (!data) return <Wrapper className="mt-10">Item not found</Wrapper>;
   if (error) return;
   if (user?.id === data.user_id) isOwner = true;
   return (
