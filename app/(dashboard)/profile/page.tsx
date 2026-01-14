@@ -15,7 +15,11 @@ export default async function Profile() {
     { data: claimData, error: claimError },
   ] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).single(),
-    supabase.from("items").select("*,profiles(*)").eq("user_id", user.id),
+    supabase
+      .from("items")
+      .select("*,profiles(*)")
+      .eq("user_id", user.id)
+      .is("deleted_at", null),
     supabase
       .from("claims")
       .select("items!inner(user_id)")
