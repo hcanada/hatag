@@ -19,9 +19,10 @@ export interface Item {
   description: string;
   category: string;
   images: string[];
-  profiles: Profile;
-  barangay: string;
-  created_at: Date;
   city: string;
+  barangay: string;
   status: ItemStatus;
+  created_at: Date;
+  deleted_at: Date;
+  profiles: Profile;
 }
