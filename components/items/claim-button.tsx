@@ -1,16 +1,20 @@
 "use client";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useState } from "react";
 import { useCurrentUser } from "@/lib/auth/get-user-client";
 import { Edit, Trash2, Users } from "lucide-react";
 import Link from "next/link";
+import DialogAuth from "../auth/dialog-auth-form";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 type ItemData = {
   id: number;
@@ -36,8 +40,31 @@ export default function ClaimButton({
 }: ClaimButtonProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const user = useCurrentUser();
   const [status, setStatus] = useState("idle");
+
+  const handleDelete = async () => {
+    const res = await fetch(`/api/delete-item/${data.id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        status: data.status,
+      }),
+    });
+    if (res.ok) {
+      if (data.status === "available") {
+        toast.success("Item deleted. Pending requests were cancelled.");
+      } else {
+        toast.success("Item deleted. The reserved request was cancelled.");
+      }
+      router.refresh();
+    } else {
+      toast.warning("Something went wrong!", {
+        duration: 5000,
+      });
+    }
+  };
 
   const handleClaim = async () => {
     if (!user) {
@@ -94,7 +121,7 @@ export default function ClaimButton({
                 <Button
                   variant="secondary"
                   className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
-                  // onClick={handleDelete}
+                  onClick={() => setOpenDelete(true)}
                 >
                   <Trash2 className="h-5 w-5" />
                   Delete
@@ -114,17 +141,27 @@ export default function ClaimButton({
                   Waiting for the claimer to pick up.
                 </p>
               </div>
-              <Button className="w-full relative my-4" asChild>
-                <Link href="/requests?status=approved">
-                  <Users className="h-5 w-5" />
-                  View Claim Requests
-                  {/* {pendingClaimsCount > 0 && (
+              <div className="flex flex-col gap-2 my-2">
+                <Button className=" relative" asChild>
+                  <Link href="/requests?status=approved">
+                    <Users className="h-5 w-5" />
+                    View Claim Requests
+                    {/* {pendingClaimsCount > 0 && (
                 <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
                   {pendingClaimsCount}
                 </span>
               )} */}
-                </Link>
-              </Button>
+                  </Link>
+                </Button>
+                <Button
+                  variant="secondary"
+                  className=" text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
+                  onClick={() => setOpenDelete(true)}
+                >
+                  <Trash2 className="h-5 w-5" />
+                  Delete
+                </Button>
+              </div>
             </>
           )}
 
@@ -187,40 +224,57 @@ export default function ClaimButton({
           )}
         </>
       )}
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+      <DialogAuth open={open} setOpen={setOpen} />
+      <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Sign in to claim this item</DialogTitle>
-            <div className="flex gap-x-4">
-              <Button
-                onClick={() => {
-                  setOpen(false);
-                  router.push(
-                    `/login?redirect=${encodeURIComponent(
-                      window.location.pathname
-                    )}`
-                  );
-                }}
-                className="flex-1"
-              >
-                Sign in
-              </Button>
-              <Button
-                onClick={() => {
-                  setOpen(false);
-                  router.push(
-                    `/signup?redirect=${encodeURIComponent(
-                      window.location.pathname
-                    )}`
-                  );
-                }}
-                className="flex-1"
-              >
-                Sign up
-              </Button>
-            </div>
+            <DialogTitle>
+              {data.status === "available"
+                ? "Delete item"
+                : "Delete reserved item?"}
+            </DialogTitle>
           </DialogHeader>
+
+          <div className="space-y-4 text-sm text-muted-foreground">
+            {/* Intro */}
+            {data.status === "available" ? (
+              <p>If this item currently has pending requests.</p>
+            ) : (
+              <p>This item is currently marked as reserved.</p>
+            )}
+
+            {/* Consequences list */}
+            <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+              <p className="font-medium text-foreground mb-2">
+                Deleting it will:
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Cancel all claim requests</li>
+                {/* <li>Notify requesters that the item was removed</li> */}
+                <li>Remove the item from public view</li>
+              </ul>
+            </div>
+
+            {/* Final warning */}
+            <p className="font-medium text-destructive">
+              This action cannot be undone.
+            </p>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              variant={"destructive"}
+              onClick={() => {
+                setOpenDelete(false);
+                handleDelete();
+              }}
+            >
+              Confirm delete
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
