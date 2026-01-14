@@ -27,7 +27,7 @@ export default async function Request({
 
   const { data, error } = await supabase
     .from("claims")
-    .select("*,items!inner (*)")
+    .select("*,items!inner (*),profiles!inner(*)")
     .eq("items.user_id", user.id)
     .eq("status", status)
     .order("created_at", { ascending: false });
@@ -64,7 +64,7 @@ export default async function Request({
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
             {data.map((claim) => {
               return (
-                <div key={claim.id}>
+                <div key={claim.id} className="border p-4 rounded-lg bg-muted">
                   <Link
                     href={`/items/${claim.items.id}`}
                     className="space-y-2 flex flex-col hover:underline hover:underline-offset-2 "
@@ -87,6 +87,12 @@ export default async function Request({
                       >
                         {claim.items.category}
                       </span>
+                    </div>{" "}
+                    <div className="flex gap-2 items-center">
+                      <div className="bg-muted-foreground size-10 rounded-full" />
+                      <h2 className="font-bold text-xl capitalize">
+                        {claim.profiles.first_name} {claim.profiles.last_name}
+                      </h2>
                     </div>
                     <h2 className="font-bold text-xl">{claim.items.title}</h2>
                     <div className="flex flex-col text-sm text-muted-foreground mt-auto">
