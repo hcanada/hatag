@@ -8,6 +8,7 @@ export default async function Items() {
   const { data: item, error: itemError } = await supabase
     .from("items")
     .select("*,profiles(*)")
+    .is("deleted_at", null)
     .order("id", { ascending: false });
 
   const items = item as Item[]; // Cast the data to the Item type

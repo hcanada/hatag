@@ -9,6 +9,7 @@ export default async function Browse() {
     .from("items")
     .select("*,profiles(*)")
     .order("id", { ascending: false })
+    .is("deleted_at", null)
     .limit(3);
   if (error) {
     console.error("Error fetching data:", error);
