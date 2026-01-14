@@ -14,16 +14,22 @@ type Item_id = {
 export default async function Item({ params }: { params: Promise<Item_id> }) {
   const supabase = await createClient();
   const user = await getCurrentUserNoRedirect();
+
   const { item_id } = await params;
   let isOwner = false;
+
   const { data, error } = await supabase
     .from("items")
     .select("*,profiles(*),claims(*)")
     .eq("id", item_id)
-    .single();
+    .maybeSingle();
+  if (error) return <Wrapper className="mt-10">Error fetching item</Wrapper>;
   if (!data) return <Wrapper className="mt-10">Item not found</Wrapper>;
-  if (error) return;
+  if (data.deleted_at)
+    return <Wrapper className="mt-10">Item is deleted</Wrapper>;
+
   if (user?.id === data.user_id) isOwner = true;
+
   return (
     <main>
       {/* Page container */}
