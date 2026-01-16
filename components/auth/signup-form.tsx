@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const searchParams = useSearchParams();
@@ -22,23 +23,36 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const supabase = createClient();
   const route = useRouter();
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    setError("");
+    if (loading) return;
+    setLoading(true);
+
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.warning("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+    if (!firstname) {
+      toast.warning("First name is required");
+      setLoading(false);
+      return;
+    }
+    if (!lastname) {
+      toast.warning("Last name is required");
+      setLoading(false);
       return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -49,9 +63,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       },
     });
     if (error) {
+      toast.error(error.message);
       console.error(error.message);
+      setLoading(false);
       return;
     }
+    setLoading(false);
     route.push(redirectTo);
     route.refresh();
   };
@@ -140,10 +157,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 minLength={8}
               />
             </Field>
-            {error && <p className="text-red-600">{error}</p>}
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Creating Account..." : "Create Account"}
+                </Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account? <Link href="/login">Sign in</Link>
                 </FieldDescription>
