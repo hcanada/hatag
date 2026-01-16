@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -37,6 +38,7 @@ export function LoginForm({
     });
 
     if (error) {
+      toast.warning(error.message);
       console.error(error.message);
       return;
     }
