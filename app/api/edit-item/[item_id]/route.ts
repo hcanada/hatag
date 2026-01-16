@@ -4,10 +4,14 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { item_id: string } }
+  { params }: { params: Promise<{ item_id: string }> }
 ) {
   // Handle PATCH request
-  const item_id = Number(params.item_id);
+
+  const { item_id } = await params;
+
+  // Convert to number
+  const itemId = parseInt(item_id);
   const formData = await req.formData();
   const supabase = await createClient();
   const {
@@ -59,7 +63,7 @@ export async function PATCH(
       images: finalImages,
       updated_at: new Date(),
     })
-    .eq("id", item_id);
+    .eq("id", itemId);
 
   if (error) {
     console.error(error.message);

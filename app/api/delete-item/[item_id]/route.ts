@@ -4,10 +4,14 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { item_id: string } }
+  { params }: { params: Promise<{ item_id: string }> }
 ) {
   // Handle POST request
-  const item_id = Number(params.item_id);
+  const { item_id } = await params;
+
+  // Convert to number
+  const itemId = parseInt(item_id);
+
   const supabase = await createClient();
   const { status } = await req.json();
   const user = await getCurrentUserNoRedirect();
@@ -21,7 +25,7 @@ export async function POST(
   const { data: item_data, error: item_error } = await supabase
     .from("items")
     .select("user_id")
-    .eq("id", item_id)
+    .eq("id", itemId)
     .single();
   if (item_error) {
     return NextResponse.json({ error: item_error.message }, { status: 500 });
@@ -38,7 +42,7 @@ export async function POST(
   const { error: claim_error } = await supabase
     .from("claims")
     .update({ status: "rejected", updated_at: new Date() })
-    .eq("item_id", item_id);
+    .eq("item_id", itemId);
 
   if (claim_error) {
     return NextResponse.json({ error: claim_error.message }, { status: 500 });
@@ -47,7 +51,7 @@ export async function POST(
   const { error } = await supabase
     .from("items")
     .update({ updated_at: new Date(), deleted_at: new Date() })
-    .eq("id", item_id)
+    .eq("id", itemId)
     .eq("status", status);
 
   if (error) {
@@ -58,7 +62,7 @@ export async function POST(
   //   const { error } = await supabase
   //     .from("items")
   //     .update({ deleted_at: new Date() })
-  //     .eq("id", item_id)
+  //     .eq("id", itemId)
   //     .eq("status", "available");
 
   //   if (error) {
@@ -68,7 +72,7 @@ export async function POST(
   //   const { error } = await supabase
   //     .from("items")
   //     .update({ deleted_at: new Date() })
-  //     .eq("id", item_id)
+  //     .eq("id", itemId)
   //     .eq("status", "reserved");
 
   //   if (error) {
@@ -79,7 +83,7 @@ export async function POST(
   // const { error } = await supabase
   //   .from("items")
   //   .update({ deleted_at: new Date() })
-  //   .eq("id", item_id)
+  //   .eq("id", itemId)
   //   .eq("status", "available");
 
   // if (error) {
@@ -90,7 +94,7 @@ export async function POST(
   // const { data: claim_data, error: claim_error } = await supabase
   //   .from("claim")
   //   .select("status")
-  //   .eq("id", item_id)
+  //   .eq("id", itemId)
   //   .single();
   // console.log(claim_data, "claimdata");
 
