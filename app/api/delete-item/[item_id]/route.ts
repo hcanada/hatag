@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { item_id: number } }
+  { params }: { params: { item_id: string } }
 ) {
   // Handle POST request
-  const { item_id } = await params;
+  const item_id = Number(params.item_id);
   const supabase = await createClient();
   const { status } = await req.json();
   const user = await getCurrentUserNoRedirect();

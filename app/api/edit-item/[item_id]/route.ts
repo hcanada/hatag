@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { item_id: number } }
+  { params }: { params: { item_id: string } }
 ) {
   // Handle PATCH request
-  const { item_id } = await params;
+  const item_id = Number(params.item_id);
   const formData = await req.formData();
   const supabase = await createClient();
   const {
