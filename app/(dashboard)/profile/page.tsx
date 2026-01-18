@@ -4,6 +4,7 @@ import { formatMonthYear } from "@/lib/date";
 import { createClient } from "@/lib/supabase/server";
 import ItemsList from "@/components/items/items-list";
 import Link from "next/link";
+import { ItemsFilter } from "@/components/items/item-filter";
 
 export default async function Profile() {
   const supabase = await createClient();
@@ -56,9 +57,12 @@ export default async function Profile() {
         </Link>
 
         <section>
-          <h1 className="font-semibold text-xl md:text-3xl my-4 md:my-6">
-            Items shared
-          </h1>
+          <div className="flex justify-between my-6">
+            <h1 className="font-semibold text-xl md:text-3xl my-4 md:my-6">
+              Items shared
+            </h1>
+            <ItemsFilter />
+          </div>
           <div className="grid md:grid-cols-3 gap-6 pb-10">
             <ItemsList data={itemsData} />
           </div>
