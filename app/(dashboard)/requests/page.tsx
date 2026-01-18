@@ -36,7 +36,7 @@ export default async function Request({
   }
   return (
     <main>
-      <Wrapper className="max-w-7xl">
+      <Wrapper className="max-w-7xl pb-10">
         <div className="my-10">
           <BackButton />
           <h1 className="font-semibold text-xl">Manage Claims</h1>
