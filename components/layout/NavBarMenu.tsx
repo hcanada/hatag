@@ -18,6 +18,8 @@ export default function NavBarMenu() {
   const supabase = createClient();
   const route = useRouter();
 
+  const { theme, setTheme } = useTheme();
+
   const handleChangeTheme = async () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -28,7 +30,6 @@ export default function NavBarMenu() {
     if (error) return console.error("Error signing out:", error.message);
     route.refresh();
   };
-  const { theme, setTheme } = useTheme();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
