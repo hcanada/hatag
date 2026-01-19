@@ -4,29 +4,8 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Claim } from "../types/item";
 
-interface Item {
-  id: number;
-  city: string;
-  title: string;
-  images: string[];
-  status: string;
-  user_id: string;
-  barangay: string;
-  category: string;
-  claimed_by: string | null;
-  created_at: string;
-  description: string;
-}
-
-interface Claim {
-  id: number;
-  item_id: number;
-  user_id: string;
-  status: string;
-  created_at: string;
-  items: Item;
-}
 interface ApproveRejectButtonProps {
   data: Claim;
 }

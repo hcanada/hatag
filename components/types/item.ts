@@ -12,6 +12,15 @@ export interface Profile {
   created_at: string;
 }
 
+export interface Claim {
+  id: number;
+  item_id: number;
+  user_id: string;
+  status: string;
+  created_at: string;
+  items: Item;
+}
+
 export interface Item {
   id: number;
   user_id: string;
@@ -24,5 +33,7 @@ export interface Item {
   status: ItemStatus;
   created_at: Date;
   deleted_at: Date;
+  claimed_by: string | null;
+  claims: Claim[];
   profiles: Profile;
 }
