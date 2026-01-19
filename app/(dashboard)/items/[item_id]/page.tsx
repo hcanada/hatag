@@ -22,7 +22,9 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
     .from("items")
     .select("*,profiles(*),claims(*)")
     .eq("id", item_id)
+    .order("id", { referencedTable: "claims", ascending: false })
     .maybeSingle();
+
   if (error) return <Wrapper className="mt-10">Error fetching item</Wrapper>;
   if (!data) return <Wrapper className="mt-10">Item not found</Wrapper>;
   if (data.deleted_at)
