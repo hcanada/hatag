@@ -15,22 +15,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Item } from "../types/item";
 
-type ItemData = {
-  id: number;
-  user_id: string;
-  title: string;
-  description: string;
-  category: string;
-  images: string[];
-  city: string;
-  barangay: string;
-  status: string;
-  created_at: Date;
-  claimed_by: string | null;
-};
 type ClaimButtonProps = {
-  data: ItemData;
+  data: Item;
   isOwner: boolean;
 };
 
@@ -90,7 +78,6 @@ export default function ClaimButton({
     }
     router.refresh();
   };
-
   return (
     <>
       {isOwner ? (
@@ -179,15 +166,17 @@ export default function ClaimButton({
       ) : (
         <>
           {/* For not owner view  */}
-          {status === "idle" && data.status === "available" && (
-            <Button
-              disabled={data.status !== "available"}
-              onClick={handleClaim}
-              className="w-full font-semibold p-6"
-            >
-              Request Claim
-            </Button>
-          )}
+          {status === "idle" &&
+            data.status === "available" &&
+            data.claims[0]?.status !== "pending" && (
+              <Button
+                disabled={data.status !== "available"}
+                onClick={handleClaim}
+                className="w-full font-semibold p-6"
+              >
+                Request Claim
+              </Button>
+            )}
           {status === "success" && (
             <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
               <p className="font-medium text-success">Request sent!</p>
@@ -214,7 +203,7 @@ export default function ClaimButton({
               </p>
             </div>
           )}
-          {status === "duplicate" && (
+          {(status === "duplicate" || data.claims[0]?.status === "pending") && (
             <div className="p-4 rounded-xl bg-muted text-center">
               <p className="font-medium text-muted-foreground">
                 You already claim this item. Please wait for the owner to
