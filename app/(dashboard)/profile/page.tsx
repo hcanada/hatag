@@ -1,5 +1,5 @@
 import Wrapper from "@/components/layout/Wrapper";
-import { getCurrentUser } from "@/lib/auth/get-user-server";
+import { requireUser } from "@/lib/auth/get-user-server";
 import { formatMonthYear } from "@/lib/date";
 import { createClient } from "@/lib/supabase/server";
 import ItemsList from "@/components/items/items-list";
@@ -8,7 +8,7 @@ import { ItemsFilter } from "@/components/items/item-filter";
 
 export default async function Profile() {
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await requireUser();
 
   const [
     { data: profileData },
@@ -24,7 +24,8 @@ export default async function Profile() {
     supabase
       .from("claims")
       .select("items!inner(user_id)")
-      .eq("status", "pending")
+      .neq("status", "rejected")
+      .neq("items.status", "claimed")
       .eq("items.user_id", user.id),
   ]);
   if (itemsError || claimError) return;
