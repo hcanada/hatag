@@ -1,10 +1,10 @@
-import { getCurrentUserNoRedirect } from "@/lib/auth/get-user-server";
+import { getCurrentUser } from "@/lib/auth/get-user-server";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ item_id: string }> }
+  { params }: { params: Promise<{ item_id: string }> },
 ) {
   // Handle POST request
   const { item_id } = await params;
@@ -14,12 +14,12 @@ export async function POST(
 
   const supabase = await createClient();
   const { status } = await req.json();
-  const user = await getCurrentUserNoRedirect();
+  const user = await getCurrentUser();
 
   if (!user) {
     return NextResponse.json(
       { error: "Unauthorized, Please log in" },
-      { status: 401 }
+      { status: 401 },
     );
   }
   const { data: item_data, error: item_error } = await supabase
@@ -35,7 +35,7 @@ export async function POST(
   if (!isOwner) {
     return NextResponse.json(
       { error: "You are not authorized to delete this item" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 

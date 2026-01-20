@@ -1,6 +1,6 @@
 import Wrapper from "@/components/layout/Wrapper";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCurrentUser } from "@/lib/auth/get-user-server";
+import { requireUser } from "@/lib/auth/get-user-server";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,7 +18,7 @@ export default async function Request({
   searchParams: { status?: string };
 }) {
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await requireUser();
   const params = await searchParams;
   const status: ClaimStatus =
     params.status === "approved" || params.status === "rejected"

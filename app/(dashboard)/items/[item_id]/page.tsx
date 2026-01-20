@@ -3,7 +3,7 @@ import ClaimButton from "@/components/items/claim-button";
 import Wrapper from "@/components/layout/Wrapper";
 import SafetyReminder from "@/components/ui/safety-reminder";
 import StatusBadge from "@/components/ui/status-badge";
-import { getCurrentUserNoRedirect } from "@/lib/auth/get-user-server";
+import { getCurrentUser } from "@/lib/auth/get-user-server";
 import { formatMonthYear, getDateFromNow } from "@/lib/date";
 import { createClient } from "@/lib/supabase/server";
 import { MapPin } from "lucide-react";
@@ -13,7 +13,7 @@ type Item_id = {
 };
 export default async function Item({ params }: { params: Promise<Item_id> }) {
   const supabase = await createClient();
-  const user = await getCurrentUserNoRedirect();
+  const user = await getCurrentUser();
 
   const { item_id } = await params;
   let isOwner = false;
