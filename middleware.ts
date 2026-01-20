@@ -1,6 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -13,10 +12,10 @@ export async function middleware(request: NextRequest) {
         getAll: () => request.cookies.getAll(),
         setAll: (cookies) =>
           cookies.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, options),
           ),
       },
-    }
+    },
   );
 
   const {
@@ -32,8 +31,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  const protectedPaths = ["/upload", "/profile", "/requests"];
+  const isEditRoute = request.nextUrl.pathname.match(/^\/items\/\d+\/edit$/);
+
   // If not logged in and trying to access upload
-  if (!user && request.nextUrl.pathname === "/upload") {
+  if (
+    !user &&
+    (protectedPaths.includes(request.nextUrl.pathname) || isEditRoute)
+  ) {
     const loginUrl = new URL("/login", request.url);
 
     // 👇 remember where they came from
@@ -45,5 +50,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/signup", "/upload"],
+  matcher: [
+    "/upload",
+    "/profile",
+    "/requests",
+    "/items/:id/edit",
+    "/login",
+    "/signup",
+  ],
 };
