@@ -70,11 +70,11 @@ export default function ClaimButton({
     if (res.ok) {
       setStatus("success");
     } else {
-      if (res.status === 409) {
-        setStatus("duplicate");
-      }
       const result = await res.json();
       console.error(result.error);
+      toast.error(result.error, {
+        duration: 5000,
+      });
     }
     router.refresh();
   };
@@ -203,7 +203,7 @@ export default function ClaimButton({
               </p>
             </div>
           )}
-          {(status === "duplicate" || data.claims[0]?.status === "pending") && (
+          {data.claims[0]?.status === "pending" && status !== "success" && (
             <div className="p-4 rounded-xl bg-muted text-center">
               <p className="font-medium text-muted-foreground">
                 You already claim this item. Please wait for the owner to
