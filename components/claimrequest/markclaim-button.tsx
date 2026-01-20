@@ -43,6 +43,11 @@ export default function MarkClaimButton({ data }: ApproveRejectButtonProps) {
       }
       setLoading("");
       router.refresh();
+    } else {
+      const result = await res.json();
+      toast.error(result.error, {
+        duration: 5000,
+      });
     }
   };
   return (
