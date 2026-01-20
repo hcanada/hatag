@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: Promise<{ item_id: string }> }
+  { params }: { params: Promise<{ item_id: string }> },
 ) {
   // Handle PATCH request
 
@@ -20,6 +20,20 @@ export async function PATCH(
 
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: item, error: fetchError } = await supabase
+    .from("items")
+    .select("user_id")
+    .eq("id", itemId)
+    .single();
+
+  if (fetchError || !item) {
+    return NextResponse.json({ error: "Item not found" }, { status: 404 });
+  }
+
+  if (item.user_id !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
@@ -72,7 +86,7 @@ export async function PATCH(
 
   if (removedImages.length > 0) {
     const paths = removedImages.map((url) =>
-      getPathFromPublicUrl(url, "items")
+      getPathFromPublicUrl(url, "items"),
     );
 
     const { error: deleteError } = await supabase.storage
