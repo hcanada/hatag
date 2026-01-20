@@ -29,7 +29,7 @@ export default function Upload() {
 
     // Generate image preview URLs for selected files
     const newPreviewUrls: string[] = selectedFiles.map(
-      (file) => URL.createObjectURL(file) // Create object URL for the file
+      (file) => URL.createObjectURL(file), // Create object URL for the file
     );
     setPreviewUrls(newPreviewUrls); // Update the state with the new preview URLs
   };
@@ -44,7 +44,7 @@ export default function Upload() {
   };
 
   const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { id, value } = e.target;
     setForm((prev) => ({
@@ -70,7 +70,7 @@ export default function Upload() {
     for (const field of requiredFields) {
       if (!form[field]?.toString().trim()) {
         toast.warning(
-          `${field[0]?.toUpperCase() + field.slice(1)} is required`
+          `${field[0]?.toUpperCase() + field.slice(1)} is required`,
         );
         setLoading(false);
         return;
@@ -99,7 +99,8 @@ export default function Upload() {
     });
     if (!res.ok) {
       setLoading(false);
-      return;
+      const result = await res.json();
+      toast.error(result.message || "Something went wrong");
     }
     setForm({
       title: "",
