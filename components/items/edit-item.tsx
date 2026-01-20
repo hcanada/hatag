@@ -32,7 +32,7 @@ export default function EditItemForm({ item }: { item: Item }) {
   });
 
   const [existingImages, setExistingImages] = useState<string[]>(
-    item.images // array of URLs
+    item.images, // array of URLs
   );
   const [files, setFiles] = useState<File[]>([]);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
@@ -58,7 +58,7 @@ export default function EditItemForm({ item }: { item: Item }) {
 
     // Generate image preview URLs for selected files
     const newPreviewUrls: string[] = selectedFiles.map(
-      (file) => URL.createObjectURL(file) // Create object URL for the file
+      (file) => URL.createObjectURL(file), // Create object URL for the file
     );
     setPreviewUrls(newPreviewUrls); // Update the state with the new preview URLs
   };
@@ -77,7 +77,7 @@ export default function EditItemForm({ item }: { item: Item }) {
   };
 
   const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { id, value } = e.target;
     setForm((prev) => ({
@@ -101,7 +101,7 @@ export default function EditItemForm({ item }: { item: Item }) {
     for (const field of requiredFields) {
       if (!form[field]?.toString().trim()) {
         toast.warning(
-          `${field[0]?.toUpperCase() + field.slice(1)} is required`
+          `${field[0]?.toUpperCase() + field.slice(1)} is required`,
         );
         setLoading(false);
         return;
@@ -141,11 +141,14 @@ export default function EditItemForm({ item }: { item: Item }) {
       toast.success("Item edited successfully");
       setLoading(false);
       router.push(`/items/${item.id}`);
+    } else {
+      const result = await res.json();
+      console.error(result.error);
+      toast.error(result.error, {
+        duration: 5000,
+      });
     }
 
-    toast.warning("Something went wrong!", {
-      duration: 5000,
-    });
     setLoading(false);
   }
 
