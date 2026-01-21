@@ -89,14 +89,7 @@ export async function PATCH(
       getPathFromPublicUrl(url, "items"),
     );
 
-    const { error: deleteError } = await supabase.storage
-      .from("items")
-      .remove(paths);
-
-    if (deleteError) {
-      console.error(deleteError.message);
-      return NextResponse.json({ error: deleteError.message }, { status: 500 });
-    }
+    await supabase.storage.from("items").remove(paths);
   }
 
   return NextResponse.json({ message: "success" }, { status: 200 });
