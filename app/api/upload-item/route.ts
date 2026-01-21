@@ -22,7 +22,8 @@ export async function POST(req: Request) {
   const barangay = formData.get("barangay") as string;
   const files = formData.getAll("images") as File[];
 
-  const imagePaths: string[] = [];
+  const storagePaths: string[] = []; // For cleanup
+  const publicUrls: string[] = []; // For DB
 
   for (const file of files) {
     const path = `${file.name}-${Date.now()}`;
@@ -30,11 +31,14 @@ export async function POST(req: Request) {
     const { error } = await supabase.storage.from("items").upload(path, file);
 
     if (error) {
+      if (storagePaths.length > 0) {
+        await supabase.storage.from("items").remove(storagePaths);
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-
+    storagePaths.push(path);
     const { data } = await supabase.storage.from("items").getPublicUrl(path);
-    imagePaths.push(data.publicUrl);
+    publicUrls.push(data.publicUrl);
   }
 
   const { error } = await supabase.from("items").insert({
@@ -44,10 +48,11 @@ export async function POST(req: Request) {
     category,
     city,
     barangay,
-    images: imagePaths,
+    images: publicUrls,
   });
 
   if (error) {
+    await supabase.storage.from("items").remove(storagePaths);
     console.error(error.message);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
