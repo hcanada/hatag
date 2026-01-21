@@ -100,8 +100,11 @@ export default function Upload() {
     if (!res.ok) {
       setLoading(false);
       const result = await res.json();
-      toast.error(result.message || "Something went wrong");
+      toast.error(result.error || "Something went wrong");
+      return;
     }
+
+    toast.success("Item uploaded successfully");
     setForm({
       title: "",
       description: "",
