@@ -14,7 +14,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function NavBarMenu() {
+export default function NavBarMenu({ data }: { data: { username: string } }) {
+  const { username } = data;
   const supabase = createClient();
   const route = useRouter();
 
@@ -41,7 +42,7 @@ export default function NavBarMenu() {
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
-          <Link href={"/profile"}>
+          <Link href={"/@" + username}>
             <DropdownMenuItem>
               <UserRoundPen /> Profile
             </DropdownMenuItem>

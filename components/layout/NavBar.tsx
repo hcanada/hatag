@@ -9,6 +9,12 @@ export default async function NavBar() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", user?.id)
+    .single();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 dark:bg-[#18191A] backdrop-blur-sm">
       <nav className="w-full flex h-16 justify-between items-center px-4 md:px-8 lg:px-16">
@@ -28,8 +34,8 @@ export default async function NavBar() {
           </Link>
         </div>
 
-        {user ? (
-          <NavBarMenu />
+        {user && data ? (
+          <NavBarMenu data={data} />
         ) : (
           <div className="flex gap-x-2">
             <Link href="/login">
