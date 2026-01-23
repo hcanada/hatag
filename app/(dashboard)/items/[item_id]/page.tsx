@@ -7,6 +7,7 @@ import { getCurrentUser } from "@/lib/auth/get-user-server";
 import { formatMonthYear, getDateFromNow } from "@/lib/date";
 import { createClient } from "@/lib/supabase/server";
 import { MapPin } from "lucide-react";
+import Link from "next/link";
 
 type Item_id = {
   item_id: string;
@@ -73,16 +74,18 @@ export default async function Item({ params }: { params: Promise<Item_id> }) {
 
               {/* Owner card */}
               <div className="mt-6 rounded-lg border -50 p-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-muted" />
-                  <div>
-                    <p className="text-sm font-semibold capitalize">
-                      {data.profiles.first_name} {data.profiles.last_name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Member since {formatMonthYear(data.profiles.created_at)}
-                    </p>
-                  </div>
+                <div className="flex items-center gap-3  ">
+                  <div className="h-10 w-10 rounded-full bg-muted " />
+                  <Link href={`/u/${data.profiles.username}`}>
+                    <div className="hover:underline">
+                      <p className="text-sm font-semibold capitalize">
+                        {data.profiles.first_name} {data.profiles.last_name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Member since {formatMonthYear(data.profiles.created_at)}
+                      </p>
+                    </div>
+                  </Link>
                 </div>
               </div>
 
