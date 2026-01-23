@@ -2,6 +2,10 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/@")) {
+    const username = request.nextUrl.pathname.slice(2); // Remove /@
+    return NextResponse.rewrite(new URL(`/u/${username}`, request.url));
+  }
   const response = NextResponse.next();
 
   const supabase = createServerClient(
@@ -31,7 +35,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  const protectedPaths = ["/upload", "/profile", "/requests"];
+  const protectedPaths = ["/upload", "/requests"];
   const isEditRoute = request.nextUrl.pathname.match(/^\/items\/\d+\/edit$/);
 
   // If not logged in and trying to access upload
@@ -52,10 +56,10 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/upload",
-    "/profile",
     "/requests",
     "/items/:id/edit",
     "/login",
     "/signup",
+    "/([@].*)",
   ],
 };
