@@ -147,9 +147,9 @@ export default function EditItemForm({ item }: { item: Item }) {
       toast.error(result.error, {
         duration: 5000,
       });
+      setLoading(false);
+      return;
     }
-
-    setLoading(false);
   }
 
   return (
