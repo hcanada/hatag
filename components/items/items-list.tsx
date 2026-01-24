@@ -53,7 +53,15 @@ export default function ItemsList({ data }: { data: Item[] }) {
           </div>
         );
       })}
-      {data.length == 0 && <div>No recently shared item</div>}
+      {data.length === 0 && (
+        <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+          <div className="text-6xl mb-4">📦</div>
+          <h3 className="text-lg font-medium">No items found</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Check back later for new items
+          </p>
+        </div>
+      )}
     </>
   );
 }
