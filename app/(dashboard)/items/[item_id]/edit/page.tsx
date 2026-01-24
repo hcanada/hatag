@@ -1,6 +1,6 @@
 import EditItemForm from "@/components/items/edit-item";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 type Item_id = {
   item_id: string;
@@ -12,6 +12,10 @@ export default async function EditItem({
   params: Promise<Item_id>;
 }) {
   const { item_id } = await params;
+  const itemId = parseInt(item_id);
+  if (isNaN(itemId) || itemId <= 0) {
+    notFound();
+  }
   const supabase = await createClient();
 
   const {

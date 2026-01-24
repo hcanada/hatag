@@ -8,21 +8,25 @@ import { formatMonthYear, getDateFromNow } from "@/lib/date";
 import { createClient } from "@/lib/supabase/server";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 type Item_id = {
   item_id: string;
 };
 export default async function Item({ params }: { params: Promise<Item_id> }) {
+  const { item_id } = await params;
+  const itemId = parseInt(item_id);
+  if (isNaN(itemId) || itemId <= 0) {
+    notFound();
+  }
   const supabase = await createClient();
   const user = await getCurrentUser();
-
-  const { item_id } = await params;
   let isOwner = false;
 
   const { data, error } = await supabase
     .from("items")
     .select("*,profiles(*),claims(*)")
-    .eq("id", item_id)
+    .eq("id", itemId)
     .order("id", { referencedTable: "claims", ascending: false })
     .maybeSingle();
 

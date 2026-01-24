@@ -10,8 +10,11 @@ export async function PATCH(
 
   const { item_id } = await params;
 
-  // Convert to number
   const itemId = parseInt(item_id);
+  if (isNaN(itemId) || itemId <= 0) {
+    return NextResponse.json({ error: "Invalid item ID" }, { status: 400 });
+  }
+
   const formData = await req.formData();
   const supabase = await createClient();
   const {

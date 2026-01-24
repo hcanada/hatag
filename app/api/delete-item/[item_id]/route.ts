@@ -9,8 +9,10 @@ export async function POST(
   // Handle POST request
   const { item_id } = await params;
 
-  // Convert to number
   const itemId = parseInt(item_id);
+  if (isNaN(itemId) || itemId <= 0) {
+    return NextResponse.json({ error: "Invalid item ID" }, { status: 400 });
+  }
 
   const supabase = await createClient();
   const { status } = await req.json();
@@ -57,46 +59,6 @@ export async function POST(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  // if (status === "available") {
-  //   const { error } = await supabase
-  //     .from("items")
-  //     .update({ deleted_at: new Date() })
-  //     .eq("id", itemId)
-  //     .eq("status", "available");
-
-  //   if (error) {
-  //     return NextResponse.json({ error: error.message }, { status: 500 });
-  //   }
-  // } else if (status === "reserved") {
-  //   const { error } = await supabase
-  //     .from("items")
-  //     .update({ deleted_at: new Date() })
-  //     .eq("id", itemId)
-  //     .eq("status", "reserved");
-
-  //   if (error) {
-  //     return NextResponse.json({ error: error.message }, { status: 500 });
-  //   }
-  // }
-
-  // const { error } = await supabase
-  //   .from("items")
-  //   .update({ deleted_at: new Date() })
-  //   .eq("id", itemId)
-  //   .eq("status", "available");
-
-  // if (error) {
-  //   return NextResponse.json({ error: error.message }, { status: 500 });
-  // }
-  // console.log(data.user_id, user.id, isOwner, "data");
-
-  // const { data: claim_data, error: claim_error } = await supabase
-  //   .from("claim")
-  //   .select("status")
-  //   .eq("id", itemId)
-  //   .single();
-  // console.log(claim_data, "claimdata");
 
   return NextResponse.json({ message: "success" }, { status: 200 });
 }
