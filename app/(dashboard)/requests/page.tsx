@@ -58,7 +58,35 @@ export default async function Request({
           </TabsList>
         </Tabs>
         {data && data.length === 0 && (
-          <div className="mt-10">No {status} data</div>
+          <div className="flex flex-col items-center justify-center py-16 text-center mt-10">
+            {status === "pending" && (
+              <>
+                <div className="text-6xl mb-4">📭</div>
+                <h3 className="text-lg font-medium">No pending requests</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  When someone requests your items, they&apos;ll appear here
+                </p>
+              </>
+            )}
+            {status === "approved" && (
+              <>
+                <div className="text-6xl mb-4">✅</div>
+                <h3 className="text-lg font-medium">No approved requests</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Approved claims will show up here
+                </p>
+              </>
+            )}
+            {status === "rejected" && (
+              <>
+                <div className="text-6xl mb-4">🚫</div>
+                <h3 className="text-lg font-medium">No rejected requests</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Rejected claims will show up here
+                </p>
+              </>
+            )}
+          </div>
         )}
         {data && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
