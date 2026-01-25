@@ -11,6 +11,20 @@ import { toast } from "sonner";
 import { Item } from "../types/item";
 import { useRouter } from "next/navigation";
 
+const VALIDATION = {
+  title: { min: 3, max: 100 },
+  description: { min: 10, max: 1000 },
+  category: { min: 2, max: 50 },
+  city: { min: 2, max: 50 },
+  barangay: { min: 2, max: 50 },
+};
+
+const IMAGE_VALIDATION = {
+  maxSize: 10 * 1024 * 1024, // 10MB
+  maxFiles: 5,
+  allowedTypes: ["image/jpeg", "image/png", "image/webp"],
+};
+
 export default function EditItemForm({ item }: { item: Item }) {
   const router = useRouter();
   const [original] = useState(() => ({
@@ -54,13 +68,42 @@ export default function EditItemForm({ item }: { item: Item }) {
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles: File[] = Array.from(e.currentTarget.files ?? []);
-    setFiles(selectedFiles);
 
-    // Generate image preview URLs for selected files
-    const newPreviewUrls: string[] = selectedFiles.map(
-      (file) => URL.createObjectURL(file), // Create object URL for the file
+    // Validate each file
+    for (const file of selectedFiles) {
+      // Check file type
+      if (!IMAGE_VALIDATION.allowedTypes.includes(file.type)) {
+        toast.error(
+          `Invalid file type: ${file.name}. Use JPG, PNG, GIF, or WebP`,
+        );
+        e.target.value = ""; // Reset input
+        return;
+      }
+      // Check file size
+      if (file.size > IMAGE_VALIDATION.maxSize) {
+        toast.error(`File too large: ${file.name}. Max size is 5MB`);
+        e.target.value = ""; // Reset input
+        return;
+      }
+    }
+
+    // Check total file count
+    const totalFiles = files.length + selectedFiles.length;
+    if (totalFiles > IMAGE_VALIDATION.maxFiles) {
+      toast.error(`Maximum ${IMAGE_VALIDATION.maxFiles} images allowed`);
+      e.target.value = "";
+      return;
+    }
+
+    // Add to existing files (instead of replacing)
+    setFiles((prev) => [...prev, ...selectedFiles]);
+
+    const newPreviewUrls = selectedFiles.map((file) =>
+      URL.createObjectURL(file),
     );
-    setPreviewUrls(newPreviewUrls); // Update the state with the new preview URLs
+    setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+
+    e.target.value = ""; // Reset input for re-selection
   };
 
   const handleRemoveExisting = (url: string) => {
@@ -90,6 +133,69 @@ export default function EditItemForm({ item }: { item: Item }) {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
+
+    // Field length validation
+    if (
+      form.title.length < VALIDATION.title.min ||
+      form.title.length > VALIDATION.title.max
+    ) {
+      toast.warning(
+        `Title must be ${VALIDATION.title.min}-${VALIDATION.title.max} characters`,
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (
+      form.description.length < VALIDATION.description.min ||
+      form.description.length > VALIDATION.description.max
+    ) {
+      toast.warning(
+        `Description must be ${VALIDATION.description.min}-${VALIDATION.description.max} characters`,
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (
+      form.category.length < VALIDATION.category.min ||
+      form.category.length > VALIDATION.category.max
+    ) {
+      toast.warning(
+        `Category must be ${VALIDATION.category.min}-${VALIDATION.category.max} characters`,
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (
+      form.city.length < VALIDATION.city.min ||
+      form.city.length > VALIDATION.city.max
+    ) {
+      toast.warning(
+        `City must be ${VALIDATION.city.min}-${VALIDATION.city.max} characters`,
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (
+      form.barangay.length < VALIDATION.barangay.min ||
+      form.barangay.length > VALIDATION.barangay.max
+    ) {
+      toast.warning(
+        `Barangay must be ${VALIDATION.barangay.min}-${VALIDATION.barangay.max} characters`,
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!files.length && existingImages.length === 0) {
+      toast.warning("At least one image is required");
+      setLoading(false);
+      return;
+    }
+
     const requiredFields = [
       "title",
       "description",
@@ -106,12 +212,6 @@ export default function EditItemForm({ item }: { item: Item }) {
         setLoading(false);
         return;
       }
-    }
-
-    if (!files.length && existingImages.length === 0) {
-      toast.warning("At least one image is required");
-      setLoading(false);
-      return;
     }
 
     const formData = new FormData();
