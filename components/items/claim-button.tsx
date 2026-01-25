@@ -31,6 +31,9 @@ export default function ClaimButton({
   const [openDelete, setOpenDelete] = useState(false);
   const user = useCurrentUser();
   const [status, setStatus] = useState("idle");
+  const pendingCount = (data.claims || []).filter(
+    (i) => i.status === "pending",
+  ).length;
 
   const handleDelete = async () => {
     const res = await fetch(`/api/delete-item/${data.id}`, {
@@ -89,11 +92,11 @@ export default function ClaimButton({
                 <Link href="/requests">
                   <Users className="h-5 w-5" />
                   View Claim Requests
-                  {/* {pendingClaimsCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
-                  {pendingClaimsCount}
-                </span>
-              )} */}
+                  {pendingCount > 0 && (
+                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
+                      {pendingCount}
+                    </span>
+                  )}
                 </Link>
               </Button>
 
@@ -133,11 +136,11 @@ export default function ClaimButton({
                   <Link href="/requests?status=approved">
                     <Users className="h-5 w-5" />
                     View Claim Requests
-                    {/* {pendingClaimsCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
-                  {pendingClaimsCount}
-                </span>
-              )} */}
+                    {pendingCount > 0 && (
+                      <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
+                        {pendingCount}
+                      </span>
+                    )}
                   </Link>
                 </Button>
                 <Button
