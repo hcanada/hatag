@@ -67,7 +67,7 @@ export default async function PublicProfile({
             </h2>
             <div className="flex space-x-4 text-muted-foreground text-sm md:text-md">
               {/* temporary */}
-              {profileData.city && <p>profileData.city</p>}
+              {/* {profileData.city && <p>profileData.city</p>} */}
               {/* temporary */}
               <p>Member since {formatMonthYear(profileData.created_at)}</p>
             </div>
@@ -92,9 +92,21 @@ export default async function PublicProfile({
             </h1>
             <ItemsFilter />
           </div>
-          <div className="grid md:grid-cols-3 gap-6 pb-10">
-            <ItemsList data={itemsData} />
-          </div>
+          {itemsData && itemsData.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-6 pb-10">
+              <ItemsList data={itemsData} />
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="text-6xl mb-4">📦</div>
+              <h3 className="text-lg font-medium">No items shared yet</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {isOwner
+                  ? "Start sharing items with your community!"
+                  : "This user hasn't shared any items yet."}
+              </p>
+            </div>
+          )}
         </section>
       </Wrapper>
     </main>
