@@ -97,4 +97,3 @@ export async function PATCH(
 
   return NextResponse.json({ message: "success" }, { status: 200 });
 }
-//missing remove images
