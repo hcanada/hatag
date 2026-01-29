@@ -47,7 +47,34 @@ export async function PATCH(
   const existingImages = formData.getAll("existingImages") as string[];
   const removedImages = formData.getAll("removedImages") as string[];
   const imagePaths: string[] = [];
+
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+  const MAX_FILES = 5;
+
+  if (files.length > MAX_FILES) {
+    return NextResponse.json(
+      { error: `Maximum ${MAX_FILES} files allowed` },
+      { status: 400 },
+    );
+  }
+
   for (const file of files) {
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json(
+        { error: `Invalid file type: ${file.type}` },
+        { status: 400 },
+      );
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: `File too large: ${file.size} bytes` },
+        { status: 400 },
+      );
+    }
+
     const path = `${file.name}-${Date.now()}`;
 
     const { error } = await supabase.storage.from("items").upload(path, file);
