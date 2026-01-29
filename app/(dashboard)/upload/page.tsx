@@ -18,10 +18,10 @@ const VALIDATION = {
 };
 
 const IMAGE_VALIDATION = {
-    maxSize: 10 * 1024 * 1024, // 10MB
-    maxFiles: 5,
-    allowedTypes: ["image/jpeg", "image/png", "image/webp"],
-  };
+  maxSize: 10 * 1024 * 1024, // 10MB
+  maxFiles: 5,
+  allowedTypes: ["image/jpeg", "image/png", "image/webp"],
+};
 
 export default function Upload() {
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,6 @@ export default function Upload() {
   });
 
   const [files, setFiles] = useState<File[]>([]);
-  // test
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
