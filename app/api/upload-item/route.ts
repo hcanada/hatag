@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 
 // Handle POST request
@@ -52,8 +53,8 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-
-    const path = `${file.name}-${Date.now()}`;
+    const ext = file.name.split(".").pop();
+    const path = `${randomUUID()}.${ext}`;
 
     const { error } = await supabase.storage.from("items").upload(path, file);
 
