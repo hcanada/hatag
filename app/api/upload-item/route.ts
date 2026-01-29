@@ -81,7 +81,6 @@ export async function POST(req: Request) {
 
   if (error) {
     await supabase.storage.from("items").remove(storagePaths);
-    console.error(error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

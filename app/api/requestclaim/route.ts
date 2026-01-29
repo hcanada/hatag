@@ -36,8 +36,10 @@ export async function POST(req: Request) {
       );
 
       if (approveError) {
-        console.error(approveError);
-        return NextResponse.json({ approveError }, { status: 500 });
+        return NextResponse.json(
+          { error: approveError.message },
+          { status: 500 },
+        );
       }
 
       return NextResponse.json(
@@ -53,8 +55,10 @@ export async function POST(req: Request) {
         .eq("status", "pending");
 
       if (rejectError) {
-        console.error(rejectError);
-        return NextResponse.json({ rejectError }, { status: 500 });
+        return NextResponse.json(
+          { error: rejectError.message },
+          { status: 500 },
+        );
       }
 
       return NextResponse.json(
@@ -70,8 +74,10 @@ export async function POST(req: Request) {
         .eq("status", "reserved");
 
       if (claimedError) {
-        console.error(claimedError);
-        return NextResponse.json({ claimedError }, { status: 500 });
+        return NextResponse.json(
+          { error: claimedError.message },
+          { status: 500 },
+        );
       }
 
       return NextResponse.json(
@@ -88,8 +94,10 @@ export async function POST(req: Request) {
       );
 
       if (cancelError) {
-        console.error(cancelError);
-        return NextResponse.json({ cancelError }, { status: 500 });
+        return NextResponse.json(
+          { error: cancelError.message },
+          { status: 500 },
+        );
       }
 
       return NextResponse.json(
