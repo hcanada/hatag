@@ -39,9 +39,6 @@ export default function ClaimButton({
     const res = await fetch(`/api/delete-item/${data.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        status: data.status,
-      }),
     });
     if (res.ok) {
       if (data.status === "available") {

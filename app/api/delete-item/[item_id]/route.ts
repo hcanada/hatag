@@ -15,7 +15,6 @@ export async function POST(
   }
 
   const supabase = await createClient();
-  const { status } = await req.json();
   const user = await getCurrentUser();
 
   if (!user) {
@@ -53,8 +52,7 @@ export async function POST(
   const { error } = await supabase
     .from("items")
     .update({ updated_at: new Date(), deleted_at: new Date() })
-    .eq("id", itemId)
-    .eq("status", status);
+    .eq("id", itemId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
