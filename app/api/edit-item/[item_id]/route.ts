@@ -1,6 +1,7 @@
 import { getPathFromPublicUrl } from "@/lib/supabase/image-path";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 
 export async function PATCH(
   req: Request,
@@ -47,7 +48,7 @@ export async function PATCH(
   const existingImages = formData.getAll("existingImages") as string[];
   const removedImages = formData.getAll("removedImages") as string[];
   const imagePaths: string[] = [];
-
+  const uploadedPaths: string[] = [];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
   const MAX_FILES = 5;
@@ -74,15 +75,18 @@ export async function PATCH(
         { status: 400 },
       );
     }
-
-    const path = `${file.name}-${Date.now()}`;
+    const ext = file.name.split(".").pop();
+    const path = `${randomUUID()}.${ext}`;
 
     const { error } = await supabase.storage.from("items").upload(path, file);
 
     if (error) {
+      if (uploadedPaths.length > 0) {
+        await supabase.storage.from("items").remove(uploadedPaths);
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-
+    uploadedPaths.push(path);
     const { data } = await supabase.storage.from("items").getPublicUrl(path);
     imagePaths.push(data.publicUrl);
   }
@@ -110,6 +114,9 @@ export async function PATCH(
     .eq("id", itemId);
 
   if (error) {
+    if (uploadedPaths.length > 0) {
+      await supabase.storage.from("items").remove(uploadedPaths);
+    }
     console.error(error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
