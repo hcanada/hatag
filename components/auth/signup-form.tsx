@@ -74,9 +74,14 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   };
 
   return (
-    <Card {...props}>
-      <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+    <Card {...props} className="border-border/60 shadow-sm">
+      <CardHeader className="text-center space-y-2">
+        <CardTitle className="font-serif text-3xl tracking-tight">
+          Join the neighborhood
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Create an account to start sharing what you have to spare.
+        </p>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
@@ -163,7 +168,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   {loading ? "Creating Account..." : "Create Account"}
                 </Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link href="/login">Sign in</Link>
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    className="text-primary font-medium hover:underline underline-offset-4"
+                  >
+                    Sign in
+                  </Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

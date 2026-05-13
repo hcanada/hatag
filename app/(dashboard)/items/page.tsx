@@ -4,7 +4,6 @@ import ItemsList from "@/components/items/items-list";
 import { Item } from "@/components/types/item";
 import { ItemsFilter } from "@/components/items/item-filter";
 import { SearchParams } from "@/components/types/search-params";
-// import { SelectScrollable } from "@/components/items/select-filter";
 
 export default async function Items({
   searchParams,
@@ -14,7 +13,6 @@ export default async function Items({
   const { q, city, category } = await searchParams;
   const supabase = await createClient();
 
-  // const { data: item, error: itemError } = await
   let query = supabase
     .from("items")
     .select("*,profiles(*)")
@@ -31,23 +29,28 @@ export default async function Items({
     query = query.ilike("category", category);
   }
 
-  const { data: item, error: itemError } = await query;
+  const { data: item } = await query;
 
-  const items = item as Item[]; // Cast the data to the Item type
-
-  if (itemError) {
-    console.error("Error fetching data:", itemError);
-  }
+  const items = (item ?? []) as Item[];
 
   return (
     <main>
-      <Wrapper className="max-w-7xl">
-        <div className="flex justify-between my-6 items-center">
-          <h1 className="font-bold text-xl ">Todays pick</h1>
+      <Wrapper className="max-w-7xl py-12 md:py-16">
+        <div className="flex items-end justify-between gap-6 mb-10 flex-wrap">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-primary" />
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                Today&apos;s shelf
+              </p>
+            </div>
+            <h1 className="font-serif text-4xl md:text-5xl leading-tight">
+              On offer right now
+            </h1>
+          </div>
           <ItemsFilter />
-          {/* <SelectScrollable /> */}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-10">
           <ItemsList data={items} />
         </div>
       </Wrapper>

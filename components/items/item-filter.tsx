@@ -1,7 +1,7 @@
 // components/items-filter.tsx
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,7 @@ const CATEGORIES = [
 ];
 
 export function ItemsFilter() {
+  const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -55,7 +56,7 @@ export function ItemsFilter() {
     if (filters.category) params.set("category", filters.category);
 
     startTransition(() => {
-      router.push(`/items?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`);
     });
     setOpen(false);
   };
@@ -63,7 +64,7 @@ export function ItemsFilter() {
   const clearFilters = () => {
     setFilters({ q: "", city: "", category: "" });
     startTransition(() => {
-      router.push("/items");
+      router.push(`${pathname}`);
     });
     setOpen(false);
   };
@@ -79,7 +80,7 @@ export function ItemsFilter() {
           value={filters.q}
           onChange={(e) => setFilters({ ...filters, q: e.target.value })}
           onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-          className="pl-11 bg-muted/50 border-0 rounded-full text-sm"
+          className="pl-11 bg-secondary/60 border border-border/40 rounded-md text-sm h-9"
         />
       </div>
 
@@ -89,7 +90,7 @@ export function ItemsFilter() {
           value={filters.city}
           onValueChange={(value) => setFilters({ ...filters, city: value })}
         >
-          <SelectTrigger className="w-32.5 bg-muted/50 border-0 rounded-full text-sm h-9">
+          <SelectTrigger className="w-32.5 bg-secondary/60 border border-border/40 rounded-md text-sm h-9">
             <SelectValue placeholder="City" />
           </SelectTrigger>
           <SelectContent>
@@ -105,7 +106,7 @@ export function ItemsFilter() {
           value={filters.category}
           onValueChange={(value) => setFilters({ ...filters, category: value })}
         >
-          <SelectTrigger className="w-35 bg-muted/50 border-0 rounded-full text-sm h-9">
+          <SelectTrigger className="w-35 bg-secondary/60 border border-border/40 rounded-md text-sm h-9">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
@@ -123,7 +124,7 @@ export function ItemsFilter() {
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="rounded-full text-xs h-9 px-3 text-muted-foreground hover:text-foreground"
+              className="rounded-md text-xs h-9 px-3 text-muted-foreground hover:text-foreground"
             >
               <X className="h-3 w-3 mr-1" />
               Clear
@@ -134,9 +135,9 @@ export function ItemsFilter() {
             onClick={applyFilters}
             disabled={isPending}
             size="sm"
-            className="rounded-full h-9 px-5"
+            className="rounded-md h-9 px-5"
           >
-            {isPending ? "..." : "Apply Filters"}
+            {isPending ? "..." : "Apply"}
           </Button>
         </div>
       </div>
@@ -148,7 +149,7 @@ export function ItemsFilter() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full h-9 px-4 bg-muted/50 border-0"
+              className="rounded-md h-9 px-4 bg-secondary/60 border-border/40"
             >
               <SlidersHorizontal className="h-4 w-4 mr-2" />
               Filters
@@ -162,7 +163,7 @@ export function ItemsFilter() {
 
           <SheetContent side="bottom" className="rounded-t-xl p-4">
             <SheetHeader className="text-left">
-              <SheetTitle>Filters</SheetTitle>
+              <SheetTitle className="font-serif text-2xl">Filters</SheetTitle>
             </SheetHeader>
 
             <div className="space-y-4 pb-6  ">
@@ -177,19 +178,21 @@ export function ItemsFilter() {
                     setFilters({ ...filters, q: e.target.value })
                   }
                   onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-                  className="pl-11 bg-muted/50 border-0 rounded-full text-sm"
+                  className="pl-11 bg-secondary/60 border border-border/40 rounded-md text-sm"
                 />
               </div>
               {/* City */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">City</label>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  City
+                </label>
                 <Select
                   value={filters.city}
                   onValueChange={(value) =>
                     setFilters({ ...filters, city: value })
                   }
                 >
-                  <SelectTrigger className="w-full bg-muted/50 border-0 rounded-lg h-11">
+                  <SelectTrigger className="w-full bg-secondary/60 border border-border/40 rounded-md h-11">
                     <SelectValue placeholder="Select city" />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,14 +206,16 @@ export function ItemsFilter() {
               </div>
               {/* Category */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Category</label>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  Category
+                </label>
                 <Select
                   value={filters.category}
                   onValueChange={(value) =>
                     setFilters({ ...filters, category: value })
                   }
                 >
-                  <SelectTrigger className="w-full bg-muted/50 border-0 rounded-lg h-11">
+                  <SelectTrigger className="w-full bg-secondary/60 border border-border/40 rounded-md h-11">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -228,16 +233,16 @@ export function ItemsFilter() {
               <Button
                 variant="outline"
                 onClick={clearFilters}
-                className="flex-1 rounded-full h-11"
+                className="flex-1 rounded-md h-11"
               >
-                Clear All
+                Clear all
               </Button>
               <Button
                 onClick={applyFilters}
                 disabled={isPending}
-                className="flex-1 rounded-full h-11"
+                className="flex-1 rounded-md h-11"
               >
-                {isPending ? "Applying..." : `Show Results`}
+                {isPending ? "Applying..." : `Show results`}
               </Button>
             </SheetFooter>
           </SheetContent>
@@ -249,7 +254,7 @@ export function ItemsFilter() {
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="rounded-full h-9 px-3 text-muted-foreground"
+            className="rounded-md h-9 px-3 text-muted-foreground"
           >
             <X className="h-3 w-3 mr-1" />
             Clear

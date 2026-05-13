@@ -4,33 +4,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Loading() {
   return (
     <main>
-      <Wrapper className="max-w-7xl pb-10">
-        <div className="my-10">
-          <Skeleton className="h-6 w-20 mb-2" />
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-64 mt-2" />
+      <Wrapper className="max-w-7xl py-8 md:py-12">
+        <div className="space-y-3 mt-6">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-12 w-72" />
+          <Skeleton className="h-4 w-96" />
         </div>
 
-        {/* Tabs skeleton */}
-        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg mt-8" />
 
-        {/* Cards grid skeleton */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="border p-4 rounded-lg bg-muted space-y-4">
-              <Skeleton className="h-48 md:h-96 w-full rounded-md" />
-              <div className="flex gap-2 items-center">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <Skeleton className="h-6 w-32" />
-              </div>
-              <Skeleton className="h-6 w-3/4" />
-              <div className="flex justify-between">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-              <div className="flex gap-4">
-                <Skeleton className="h-10 flex-1 rounded-full" />
-                <Skeleton className="h-10 flex-1 rounded-full" />
+            <div
+              key={i}
+              className="bg-card rounded-lg overflow-hidden shadow-sm"
+            >
+              <Skeleton className="h-60 w-full" />
+              <div className="p-5 space-y-3">
+                <Skeleton className="h-3 w-32" />
+                <Skeleton className="h-6 w-3/4" />
+                <div className="flex justify-between pt-3 border-t border-border/60">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <Skeleton className="h-10 flex-1 rounded-md" />
+                  <Skeleton className="h-10 flex-1 rounded-md" />
+                </div>
               </div>
             </div>
           ))}

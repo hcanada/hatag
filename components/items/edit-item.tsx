@@ -254,66 +254,93 @@ export default function EditItemForm({ item }: { item: Item }) {
 
   return (
     <main>
-      <Wrapper className="max-w-xl lg:max-w-7xl grid lg:grid-cols-2 gap-x-6 mt-5 md:mt-20">
-        <form onSubmit={handleSubmit}>
-          <BackButton />
-          <div className="space-y-4">
-            <h1 className="font-bold text-2xl">Edit item</h1>
-            <Label htmlFor="title">Title</Label>
-            <Textarea
-              id="title"
-              className="resize-none h-12"
-              value={form.title}
-              onChange={handleFormChange}
-              required
-            />
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              className="h-32 resize-none"
-              value={form.description}
-              onChange={handleFormChange}
-              required
-            />
+      <Wrapper className="max-w-3xl py-8 md:py-12">
+        <BackButton />
+        <form onSubmit={handleSubmit} className="space-y-8 mt-6">
+          <header className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-primary" />
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                Revisions
+              </p>
+            </div>
+            <h1 className="font-serif text-4xl md:text-5xl leading-tight">
+              Edit item
+            </h1>
+          </header>
+
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                Title
+              </Label>
+              <Textarea
+                id="title"
+                className="resize-none h-12 bg-card"
+                value={form.title}
+                onChange={handleFormChange}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                className="h-32 resize-none bg-card"
+                value={form.description}
+                onChange={handleFormChange}
+                required
+              />
+            </div>
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="space-y-4">
-                <Label htmlFor="category">Category</Label>
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  Category
+                </Label>
                 <Textarea
                   id="category"
-                  className="h-12 resize-none "
+                  className="h-12 resize-none bg-card"
                   value={form.category}
                   onChange={handleFormChange}
                   required
                 />
               </div>
-              <div className="space-y-4">
-                <Label htmlFor="city">City</Label>
+              <div className="space-y-2">
+                <Label htmlFor="city" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  City
+                </Label>
                 <Textarea
                   id="city"
-                  className="h-12 resize-none "
+                  className="h-12 resize-none bg-card"
                   value={form.city}
                   onChange={handleFormChange}
                   required
                 />
               </div>
-              <div className="space-y-4">
-                <Label htmlFor="barangay">Barangay</Label>
+              <div className="space-y-2">
+                <Label htmlFor="barangay" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  Barangay
+                </Label>
                 <Textarea
                   id="barangay"
-                  className="h-12 resize-none"
+                  className="h-12 resize-none bg-card"
                   value={form.barangay}
                   onChange={handleFormChange}
                   required
                 />
               </div>
             </div>
-            <div>
-              <Label className="text-base font-medium mb-3 block">Photos</Label>
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                Photos
+              </Label>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
                 {existingImages.map((img, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square rounded-xl overflow-hidden bg-muted"
+                    className="relative aspect-square rounded-lg overflow-hidden bg-muted ring-1 ring-border/40"
                   >
                     <img
                       src={img}
@@ -323,7 +350,7 @@ export default function EditItemForm({ item }: { item: Item }) {
                     <button
                       type="button"
                       onClick={() => handleRemoveExisting(img)}
-                      className="absolute top-1 right-1 p-1 rounded-full bg-destructive text-destructive-foreground"
+                      className="absolute top-1.5 right-1.5 p-1 rounded-full bg-destructive text-destructive-foreground shadow-sm"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -332,7 +359,7 @@ export default function EditItemForm({ item }: { item: Item }) {
                 {previewUrls.map((img, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square rounded-xl overflow-hidden bg-muted"
+                    className="relative aspect-square rounded-lg overflow-hidden bg-muted ring-1 ring-border/40"
                   >
                     <img
                       src={img}
@@ -342,17 +369,17 @@ export default function EditItemForm({ item }: { item: Item }) {
                     <button
                       type="button"
                       onClick={() => handleRemoveFile(index)}
-                      className="absolute top-1 right-1 p-1 rounded-full bg-destructive text-destructive-foreground"
+                      className="absolute top-1.5 right-1.5 p-1 rounded-full bg-destructive text-destructive-foreground shadow-sm"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </div>
                 ))}
                 {previewUrls.length < 10 && (
-                  <label className="aspect-square rounded-xl border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 cursor-pointer flex flex-col items-center justify-center transition-colors">
-                    <ImageIcon className="h-6 w-6 text-muted-foreground mb-1" />{" "}
-                    <span className="text-xs text-muted-foreground">
-                      Add Photo
+                  <label className="aspect-square rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 cursor-pointer flex flex-col items-center justify-center transition-colors gap-1">
+                    <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Add photo
                     </span>
                     <Input
                       type="file"
@@ -365,16 +392,22 @@ export default function EditItemForm({ item }: { item: Item }) {
                 )}
               </div>
             </div>
-            <Button type="submit" disabled={loading || !hasChanges}>
-              {loading ? (
-                <>
-                  <LoaderCircle className="animate-spin" /> Uploading...
-                </>
-              ) : (
-                "Confirm Edit"
-              )}
-            </Button>
           </div>
+
+          <Button
+            type="submit"
+            disabled={loading || !hasChanges}
+            size="lg"
+            className="w-full sm:w-auto"
+          >
+            {loading ? (
+              <>
+                <LoaderCircle className="animate-spin" /> Saving...
+              </>
+            ) : (
+              "Save changes"
+            )}
+          </Button>
         </form>
       </Wrapper>
     </main>

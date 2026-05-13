@@ -82,13 +82,12 @@ export default function ClaimButton({
     <>
       {isOwner ? (
         <>
-          {/* Manage Claims Button */}
           {data.status === "available" && (
             <>
-              <Button className="w-full relative" asChild>
+              <Button className="w-full relative" size="lg" asChild>
                 <Link href="/requests">
                   <Users className="h-5 w-5" />
-                  View Claim Requests
+                  View claim requests
                   {pendingCount > 0 && (
                     <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
                       {pendingCount}
@@ -97,42 +96,40 @@ export default function ClaimButton({
                 </Link>
               </Button>
 
-              {/* Edit & Delete Buttons */}
-              <div className="flex gap-2 my-2">
-                <Button variant="secondary" className="flex-1" asChild>
+              <div className="flex gap-2 mt-3">
+                <Button variant="outline" className="flex-1" asChild>
                   <Link href={`/items/${data.id}/edit`}>
-                    <Edit className="h-5 w-5" />
-                    Edit Item
+                    <Edit className="h-4 w-4" />
+                    Edit
                   </Link>
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   className="flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
                   onClick={() => setOpenDelete(true)}
                 >
-                  <Trash2 className="h-5 w-5" />
+                  <Trash2 className="h-4 w-4" />
                   Delete
                 </Button>
               </div>
             </>
           )}
 
-          {/* Status Info for Owner */}
           {data.status === "reserved" && (
             <>
-              <div className="p-4 rounded-xl bg-yellow-400/10 border border-yellow-400/20 text-center">
-                <p className="font-medium text-yellow-400">
+              <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-center">
+                <p className="font-serif text-lg text-amber-700 dark:text-amber-400">
                   This item is reserved
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Waiting for the claimer to pick up.
+                  Waiting for the neighbor to pick up.
                 </p>
               </div>
-              <div className="flex flex-col gap-2 my-2">
-                <Button className=" relative" asChild>
+              <div className="flex flex-col gap-2 mt-3">
+                <Button className="relative" size="lg" asChild>
                   <Link href="/requests?status=approved">
                     <Users className="h-5 w-5" />
-                    View Claim Requests
+                    View claim requests
                     {pendingCount > 0 && (
                       <span className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
                         {pendingCount}
@@ -141,11 +138,11 @@ export default function ClaimButton({
                   </Link>
                 </Button>
                 <Button
-                  variant="secondary"
-                  className=" text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
+                  variant="outline"
+                  className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
                   onClick={() => setOpenDelete(true)}
                 >
-                  <Trash2 className="h-5 w-5" />
+                  <Trash2 className="h-4 w-4" />
                   Delete
                 </Button>
               </div>
@@ -153,9 +150,9 @@ export default function ClaimButton({
           )}
 
           {data.status === "claimed" && (
-            <div className="p-4 rounded-xl bg-green-400/10 border border-green-400/20 text-center">
-              <p className="font-medium text-green-400">
-                Successfully given away! 🎉
+            <div className="p-5 rounded-lg bg-primary/8 border border-primary/20 text-center">
+              <p className="font-serif text-lg text-primary">
+                Passed along successfully
               </p>
               <p className="text-sm text-muted-foreground mt-1">
                 This item has found a new home.
@@ -165,49 +162,50 @@ export default function ClaimButton({
         </>
       ) : (
         <>
-          {/* For not owner view  */}
           {status === "idle" &&
             data.status === "available" &&
             data.claims[0]?.status !== "pending" && (
               <Button
                 disabled={data.status !== "available"}
                 onClick={handleClaim}
-                className="w-full font-semibold p-6"
+                size="lg"
+                className="w-full"
               >
-                Request Claim
+                Request to claim
               </Button>
             )}
           {status === "success" && (
-            <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
-              <p className="font-medium text-success">Request sent!</p>
+            <div className="p-5 rounded-lg bg-primary/8 border border-primary/20 text-center">
+              <p className="font-serif text-lg text-primary">Request sent</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Owner will review your request.
+                The owner will review your request.
               </p>
             </div>
           )}
           {data.status === "reserved" && (
-            <div className="p-4 rounded-xl bg-yellow-400/10 border border-yellow-400/20 text-center">
-              <p className="font-medium text-yellow-400">
-                This item is reserved
+            <div className="p-5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-center">
+              <p className="font-serif text-lg text-amber-700 dark:text-amber-400">
+                Already reserved
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                {user?.id === data.claimed_by ? "You" : "Someone has"} already
-                reserved this item.
+                {user?.id === data.claimed_by
+                  ? "You've reserved this item."
+                  : "Another neighbor has reserved this item."}
               </p>
             </div>
           )}
           {data.status === "claimed" && (
-            <div className="p-4 rounded-xl bg-muted text-center">
-              <p className="font-medium text-muted-foreground">
-                This item has been claimed
+            <div className="p-5 rounded-lg bg-secondary/50 text-center">
+              <p className="font-serif text-lg text-muted-foreground">
+                This item has found its home
               </p>
             </div>
           )}
           {data.claims[0]?.status === "pending" && status !== "success" && (
-            <div className="p-4 rounded-xl bg-muted text-center">
-              <p className="font-medium text-muted-foreground">
-                You already claim this item. Please wait for the owner to
-                approve.
+            <div className="p-5 rounded-lg bg-secondary/50 text-center">
+              <p className="text-sm text-muted-foreground">
+                You&apos;ve already requested this item. Please wait for the
+                owner to respond.
               </p>
             </div>
           )}
@@ -217,34 +215,30 @@ export default function ClaimButton({
       <Dialog open={openDelete} onOpenChange={setOpenDelete}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="font-serif text-2xl">
               {data.status === "available"
-                ? "Delete item"
+                ? "Delete this item?"
                 : "Delete reserved item?"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 text-sm text-muted-foreground">
-            {/* Intro */}
             {data.status === "available" ? (
-              <p>If this item currently has pending requests.</p>
+              <p>This item may have pending requests.</p>
             ) : (
               <p>This item is currently marked as reserved.</p>
             )}
 
-            {/* Consequences list */}
-            <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+            <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
               <p className="font-medium text-foreground mb-2">
                 Deleting it will:
               </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Cancel all claim requests</li>
-                {/* <li>Notify requesters that the item was removed</li> */}
                 <li>Remove the item from public view</li>
               </ul>
             </div>
 
-            {/* Final warning */}
             <p className="font-medium text-destructive">
               This action cannot be undone.
             </p>
@@ -255,7 +249,7 @@ export default function ClaimButton({
             </DialogClose>
             <Button
               type="submit"
-              variant={"destructive"}
+              variant="destructive"
               onClick={() => {
                 setOpenDelete(false);
                 handleDelete();

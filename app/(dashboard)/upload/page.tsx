@@ -219,109 +219,178 @@ export default function Upload() {
 
   return (
     <main>
-      <Wrapper className="max-w-xl lg:max-w-7xl grid lg:grid-cols-2 gap-x-6 mt-5 md:mt-20">
-        <form onSubmit={handleSubmit}>
-          <BackButton />
-          <div className="space-y-4">
-            <h1 className="font-bold text-2xl">Upload item</h1>
-            <Label htmlFor="title">Title</Label>
-            <Textarea
-              id="title"
-              className="resize-none h-12"
-              value={form.title}
-              onChange={handleFormChange}
-              required
-            />
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              className="h-32 resize-none"
-              value={form.description}
-              onChange={handleFormChange}
-              required
-            />
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="space-y-4">
-                <Label htmlFor="category">Category</Label>
+      <Wrapper className="max-w-6xl py-8 md:py-12">
+        <BackButton />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mt-6">
+          <form
+            onSubmit={handleSubmit}
+            className="lg:col-span-7 space-y-8"
+          >
+            <header className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-8 bg-primary" />
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                  Share something
+                </p>
+              </div>
+              <h1 className="font-serif text-4xl md:text-5xl leading-tight">
+                Post an item
+              </h1>
+              <p className="text-muted-foreground">
+                A few good photos and a short story go a long way.
+              </p>
+            </header>
+
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="title" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  Title
+                </Label>
                 <Textarea
-                  id="category"
-                  className="h-12 resize-none "
-                  value={form.category}
+                  id="title"
+                  className="resize-none h-12 bg-card"
+                  placeholder="e.g. Vintage wooden chair"
+                  value={form.title}
                   onChange={handleFormChange}
                   required
                 />
               </div>
-              <div className="space-y-4">
-                <Label htmlFor="city">City</Label>
+
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  Description
+                </Label>
                 <Textarea
-                  id="city"
-                  className="h-12 resize-none "
-                  value={form.city}
+                  id="description"
+                  className="h-32 resize-none bg-card"
+                  placeholder="Tell neighbors a little about it — condition, history, any quirks."
+                  value={form.description}
                   onChange={handleFormChange}
                   required
                 />
               </div>
-              <div className="space-y-4">
-                <Label htmlFor="barangay">Barangay</Label>
-                <Textarea
-                  id="barangay"
-                  className="h-12 resize-none"
-                  value={form.barangay}
-                  onChange={handleFormChange}
-                  required
-                />
+
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                    Category
+                  </Label>
+                  <Textarea
+                    id="category"
+                    className="h-12 resize-none bg-card"
+                    value={form.category}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="city" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                    City
+                  </Label>
+                  <Textarea
+                    id="city"
+                    className="h-12 resize-none bg-card"
+                    value={form.city}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="barangay" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                    Barangay
+                  </Label>
+                  <Textarea
+                    id="barangay"
+                    className="h-12 resize-none bg-card"
+                    value={form.barangay}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
               </div>
-            </div>
-            <div>
-              <Label className="text-base font-medium mb-3 block">Photos</Label>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-                {previewUrls.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative aspect-square rounded-xl overflow-hidden bg-muted"
-                  >
-                    <img
-                      src={img}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFile(index)}
-                      className="absolute top-1 right-1 p-1 rounded-full bg-destructive text-destructive-foreground"
+
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  Photos
+                </Label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                  {previewUrls.map((img, index) => (
+                    <div
+                      key={index}
+                      className="relative aspect-square rounded-lg overflow-hidden bg-muted ring-1 ring-border/40"
                     >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-                {previewUrls.length < 5 && (
-                  <label className="aspect-square rounded-xl border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 cursor-pointer flex flex-col items-center justify-center transition-colors">
-                    <ImageIcon className="h-6 w-6 text-muted-foreground mb-1" />{" "}
-                    <span className="text-xs text-muted-foreground">
-                      Add Photo
-                    </span>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                )}
+                      <img
+                        src={img}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(index)}
+                        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-destructive text-destructive-foreground shadow-sm"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {previewUrls.length < 5 && (
+                    <label className="aspect-square rounded-lg border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 cursor-pointer flex flex-col items-center justify-center transition-colors gap-1">
+                      <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Add photo
+                      </span>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
               </div>
             </div>
-            <Button type="submit" disabled={loading}>
+
+            <Button type="submit" disabled={loading} size="lg" className="w-full sm:w-auto">
               {loading ? (
                 <>
-                  <LoaderCircle className="animate-spin" /> Uploading...
+                  <LoaderCircle className="animate-spin" /> Posting...
                 </>
               ) : (
-                "Upload Item"
+                "Post item"
               )}
             </Button>
-          </div>
-        </form>
+          </form>
+
+          <aside className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+            <div className="rounded-xl bg-secondary/50 p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-6 bg-primary" />
+                <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
+                  A few tips
+                </p>
+              </div>
+              <h2 className="font-serif text-2xl leading-tight">
+                What makes a good post
+              </h2>
+              <ul className="text-sm text-muted-foreground space-y-3 leading-relaxed">
+                <li>
+                  <strong className="text-foreground">Natural light.</strong>{" "}
+                  Take photos near a window so neighbors can see true colors.
+                </li>
+                <li>
+                  <strong className="text-foreground">Honest condition.</strong>{" "}
+                  Mention any scratches or quirks. Trust beats surprises.
+                </li>
+                <li>
+                  <strong className="text-foreground">Pickup details.</strong>{" "}
+                  Note when and where you&apos;d like to meet up.
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
       </Wrapper>
     </main>
   );
