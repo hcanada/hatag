@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageIcon, LoaderCircle, X } from "lucide-react";
+import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -319,15 +320,18 @@ export default function Upload() {
                       key={index}
                       className="relative aspect-square rounded-lg overflow-hidden bg-muted ring-1 ring-border/40"
                     >
-                      <img
+                      <Image
                         src={img}
                         alt=""
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="(max-width: 640px) 33vw, 20vw"
+                        className="object-cover"
+                        unoptimized
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveFile(index)}
-                        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-destructive text-destructive-foreground shadow-sm"
+                        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-destructive text-destructive-foreground shadow-sm z-10"
                       >
                         <X className="h-3 w-3" />
                       </button>
