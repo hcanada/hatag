@@ -64,21 +64,21 @@ export default function MarkClaimButton({ data }: ApproveRejectButtonProps) {
 
   return (
     <>
-      <div className="w-full flex gap-4">
+      <div className="w-full flex gap-3">
         <Button
-          className="flex-1 rounded-full"
+          className="flex-1"
           onClick={() => setOpenClaimed(true)}
           disabled={!!loading}
         >
-          {loading === "claimed" ? "Loading..." : "Mark as Claimed"}
+          {loading === "claimed" ? "Loading..." : "Mark as claimed"}
         </Button>
         <Button
-          className="flex-1 rounded-full"
+          className="flex-1"
           onClick={() => setOpenCancel(true)}
-          variant={"secondary"}
+          variant="outline"
           disabled={!!loading}
         >
-          {loading === "cancel" ? "Loading..." : "Cancel Reservation"}
+          {loading === "cancel" ? "Loading..." : "Cancel reservation"}
         </Button>
       </div>
 
@@ -86,15 +86,17 @@ export default function MarkClaimButton({ data }: ApproveRejectButtonProps) {
       <Dialog open={openClaimed} onOpenChange={setOpenClaimed}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Mark as claimed?</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">
+              Pass it on?
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-sm text-muted-foreground">
-            <p>Confirm that the item has been handed over to the claimer.</p>
-            <div className="rounded-md border border-green-500/30 bg-green-500/10 p-3">
+            <p>Confirm that the item has been handed over to the neighbor.</p>
+            <div className="rounded-lg border border-accent/40 bg-accent/20 p-4">
               <p className="font-medium text-foreground mb-2">This will:</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>Mark the item as successfully given away</li>
-                <li>Complete the transaction</li>
+                <li>Mark the item as successfully shared</li>
+                <li>Complete the exchange</li>
               </ul>
             </div>
           </div>
@@ -119,31 +121,33 @@ export default function MarkClaimButton({ data }: ApproveRejectButtonProps) {
       <Dialog open={openCancel} onOpenChange={setOpenCancel}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Cancel this reservation?</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">
+              Cancel this reservation?
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-sm text-muted-foreground">
             <p>The approved claimer will lose their reservation.</p>
-            <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
               <p className="font-medium text-foreground mb-2">This will:</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Make the item available again</li>
-                <li>Reject the current reservation</li>
+                <li>Decline the current reservation</li>
               </ul>
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Keep Reservation</Button>
+              <Button variant="outline">Keep reservation</Button>
             </DialogClose>
             <Button
-              variant={"destructive"}
+              variant="destructive"
               disabled={!!loading}
               onClick={() => {
                 setOpenCancel(false);
                 handleClick("cancel");
               }}
             >
-              {loading === "cancel" ? "Loading..." : "Cancel Reservation"}
+              {loading === "cancel" ? "Loading..." : "Cancel reservation"}
             </Button>
           </DialogFooter>
         </DialogContent>

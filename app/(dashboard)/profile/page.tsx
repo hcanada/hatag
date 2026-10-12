@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import ItemsList from "@/components/items/items-list";
 import Link from "next/link";
 import { ItemsFilter } from "@/components/items/item-filter";
+import { ArrowUpRight, Package } from "lucide-react";
 
 export default async function Profile() {
   const supabase = await createClient();
@@ -31,42 +32,79 @@ export default async function Profile() {
   if (itemsError || claimError) return;
   return (
     <main>
-      <Wrapper className="max-w-7xl mt-10">
-        <section className="flex items-center space-x-6 pb-6 md:pb-10 border-b">
-          <div className="size-20 md:size-40 bg-accent-foreground rounded-full" />
-          <div>
-            <h2 className="font-semibold text-2xl md:text-3xl capitalize">
-              {profileData.first_name} {profileData.last_name}
-            </h2>
-            <div className="flex space-x-4 text-muted-foreground text-sm md:text-md">
-              {/* temporary */}
-              {profileData.city && <p>profileData.city</p>}
-              {/* temporary */}
-              <p>Member since {formatMonthYear(profileData.created_at)}</p>
+      <Wrapper className="max-w-7xl py-10 md:py-16">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pb-10 border-b border-border/60">
+          <div className="md:col-span-3 flex justify-center md:justify-start">
+            <div className="size-28 md:size-40 rounded-full bg-primary/15 ring-2 ring-primary/20 flex items-center justify-center font-serif text-primary text-4xl md:text-5xl capitalize">
+              {profileData.first_name?.[0]}
+              {profileData.last_name?.[0]}
             </div>
+          </div>
+          <div className="md:col-span-9 space-y-3 text-center md:text-left">
+            <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+              Your shelf
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl leading-tight capitalize">
+              {profileData.first_name} {profileData.last_name}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Member since {formatMonthYear(profileData.created_at)}
+            </p>
           </div>
         </section>
 
-        <Link href={"/requests"}>
-          <div className="flex justify-between items-center mt-6 rounded-lg border p-4 text-sm text-green-700 dark:text-green-400">
+        <Link href="/requests" className="block mt-8 group">
+          <div className="flex justify-between items-center rounded-xl border border-primary/20 bg-primary/5 p-5 hover:bg-primary/10 transition-colors">
             <div>
-              <p className="font-semibold">Manage Claim Request</p>
-              <p className="mt-1 text-xs">Review and respond to claims</p>
+              <p className="font-serif text-lg text-primary">
+                Manage claim requests
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Review and respond to neighbors&apos; requests
+              </p>
             </div>
-            <div>{claimData.length} Pending</div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-primary">
+                {claimData.length} pending
+              </span>
+              <ArrowUpRight
+                size={16}
+                className="text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </div>
           </div>
         </Link>
 
-        <section>
-          <div className="flex justify-between my-6">
-            <h1 className="font-semibold text-xl md:text-3xl my-4 md:my-6">
-              Items shared
-            </h1>
+        <section className="mt-12">
+          <div className="flex flex-wrap justify-between items-end gap-4 mb-8">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-8 bg-primary" />
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                  Your contributions
+                </p>
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl leading-tight">
+                Items shared
+              </h2>
+            </div>
             <ItemsFilter />
           </div>
-          <div className="grid md:grid-cols-3 gap-6 pb-10">
-            <ItemsList data={itemsData} />
-          </div>
+          {itemsData && itemsData.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 pb-10">
+              <ItemsList data={itemsData} />
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="h-14 w-14 rounded-full bg-secondary/60 flex items-center justify-center mb-5">
+                <Package className="text-muted-foreground" size={26} />
+              </div>
+              <h3 className="font-serif text-2xl">Your shelf is empty</h3>
+              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                Start sharing items with your community.
+              </p>
+            </div>
+          )}
         </section>
       </Wrapper>
     </main>

@@ -16,33 +16,48 @@ export default async function NavBar() {
     .eq("id", user?.id)
     .single();
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 dark:bg-[#18191A] backdrop-blur-sm">
-      <nav className="w-full flex h-16 justify-between items-center px-4 md:px-8 lg:px-16">
-        <Link href="/" className="text-green-500 font-bold text-xl">
-          Hatag{" "}
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
+      <nav className="w-full flex h-18 justify-between items-center px-6 md:px-10 lg:px-16">
+        <Link
+          href="/"
+          className="font-serif text-2xl tracking-tight text-foreground flex items-center gap-2"
+        >
+          <span className="inline-block h-2 w-2 rounded-full bg-primary" />
+          Hatag
         </Link>
 
-        <div className="hidden md:flex">
-          <Link href="/">
-            <Button variant={"link"}>Home</Button>
+        <div className="hidden md:flex items-center gap-8">
+          <Link
+            href="/"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Home
           </Link>
-          <Link href="/items">
-            <Button variant={"link"}>Browse Items</Button>
+          <Link
+            href="/items"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Browse
           </Link>
-          <Link href="/upload">
-            <Button variant={"link"}>Post Items</Button>
+          <Link
+            href="/upload"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Share
           </Link>
         </div>
 
         {user && data ? (
           <NavBarMenu data={data} />
         ) : (
-          <div className="flex gap-x-2">
+          <div className="flex items-center gap-2">
             <Link href="/login">
-              <Button>Log in</Button>
+              <Button variant="ghost" size="sm">
+                Log in
+              </Button>
             </Link>
             <Link href="/signup">
-              <Button variant={"secondary"}>Signup</Button>
+              <Button size="sm">Sign up</Button>
             </Link>
           </div>
         )}

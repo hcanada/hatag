@@ -48,9 +48,14 @@ export function LoginForm({
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="font-serif text-3xl tracking-tight">
+            Welcome back
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Sign in to continue sharing with your neighbors.
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -79,13 +84,18 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit">Sign in</Button>
                 <Button variant="outline" type="button">
                   Forgot password
                 </Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "}
-                  <Link href="/signup">Sign up</Link>
+                  New to Hatag?{" "}
+                  <Link
+                    href="/signup"
+                    className="text-primary font-medium hover:underline underline-offset-4"
+                  >
+                    Create an account
+                  </Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

@@ -68,18 +68,18 @@ export default function ApproveRejectButton({
 
   return (
     <>
-      <div className="w-full flex gap-4">
+      <div className="w-full flex gap-3">
         <Button
-          className="flex-1 rounded-full"
+          className="flex-1"
           onClick={() => setOpenApprove(true)}
           disabled={!!loading}
         >
           {loading === "approved" ? "Loading..." : "Approve"}
         </Button>
         <Button
-          className="flex-1 rounded-full"
+          className="flex-1"
           onClick={() => setOpenReject(true)}
-          variant={"secondary"}
+          variant="outline"
           disabled={!!loading}
         >
           {loading === "rejected" ? "Loading..." : "Reject"}
@@ -90,15 +90,17 @@ export default function ApproveRejectButton({
       <Dialog open={openApprove} onOpenChange={setOpenApprove}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Approve this claim?</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">
+              Approve this claim?
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-sm text-muted-foreground">
-            <p>You are about to approve this claim request.</p>
-            <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+            <p>You&apos;re about to approve this claim request.</p>
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
               <p className="font-medium text-foreground mb-2">This will:</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>Reserve the item for this person</li>
-                <li>Automatically reject all other pending requests</li>
+                <li>Reserve the item for this neighbor</li>
+                <li>Politely decline all other pending requests</li>
               </ul>
             </div>
           </div>
@@ -123,12 +125,14 @@ export default function ApproveRejectButton({
       <Dialog open={openReject} onOpenChange={setOpenReject}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Reject this claim?</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">
+              Decline this claim?
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-sm text-muted-foreground">
-            <p>The requester will be notified that their claim was rejected.</p>
+            <p>The neighbor will be notified that their claim was declined.</p>
             <p className="font-medium text-foreground">
-              Are you sure you want to reject this request?
+              Are you sure you want to decline this request?
             </p>
           </div>
           <DialogFooter>
@@ -136,14 +140,14 @@ export default function ApproveRejectButton({
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button
-              variant={"destructive"}
+              variant="destructive"
               disabled={!!loading}
               onClick={() => {
                 setOpenReject(false);
                 handleClick("rejected");
               }}
             >
-              {loading === "rejected" ? "Loading..." : "Reject"}
+              {loading === "rejected" ? "Loading..." : "Decline"}
             </Button>
           </DialogFooter>
         </DialogContent>
