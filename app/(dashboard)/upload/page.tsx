@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageIcon, LoaderCircle, X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ const IMAGE_VALIDATION = {
 };
 
 export default function Upload() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: "",
@@ -205,17 +207,9 @@ export default function Upload() {
       return;
     }
 
-    toast.success("Item uploaded successfully");
-    setForm({
-      title: "",
-      description: "",
-      category: "",
-      city: "",
-      barangay: "",
-    });
-    setFiles([]);
-    setPreviewUrls([]);
-    setLoading(false);
+    const { id } = await res.json();
+    toast.success("Item posted!");
+    router.push(`/items/${id}`);
   }
 
   return (
@@ -223,10 +217,7 @@ export default function Upload() {
       <Wrapper className="max-w-6xl py-8 md:py-12">
         <BackButton />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mt-6">
-          <form
-            onSubmit={handleSubmit}
-            className="lg:col-span-7 space-y-8"
-          >
+          <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-8">
             <header className="space-y-3">
               <div className="flex items-center gap-3">
                 <span className="h-px w-8 bg-primary" />
@@ -244,7 +235,10 @@ export default function Upload() {
 
             <div className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                <Label
+                  htmlFor="title"
+                  className="text-xs uppercase tracking-wider text-muted-foreground font-medium"
+                >
                   Title
                 </Label>
                 <Textarea
@@ -258,7 +252,10 @@ export default function Upload() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                <Label
+                  htmlFor="description"
+                  className="text-xs uppercase tracking-wider text-muted-foreground font-medium"
+                >
                   Description
                 </Label>
                 <Textarea
@@ -273,7 +270,10 @@ export default function Upload() {
 
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  <Label
+                    htmlFor="category"
+                    className="text-xs uppercase tracking-wider text-muted-foreground font-medium"
+                  >
                     Category
                   </Label>
                   <Textarea
@@ -285,7 +285,10 @@ export default function Upload() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="city" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  <Label
+                    htmlFor="city"
+                    className="text-xs uppercase tracking-wider text-muted-foreground font-medium"
+                  >
                     City
                   </Label>
                   <Textarea
@@ -297,7 +300,10 @@ export default function Upload() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="barangay" className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                  <Label
+                    htmlFor="barangay"
+                    className="text-xs uppercase tracking-wider text-muted-foreground font-medium"
+                  >
                     Barangay
                   </Label>
                   <Textarea
@@ -356,7 +362,12 @@ export default function Upload() {
               </div>
             </div>
 
-            <Button type="submit" disabled={loading} size="lg" className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={loading}
+              size="lg"
+              className="w-full sm:w-auto"
+            >
               {loading ? (
                 <>
                   <LoaderCircle className="animate-spin" /> Posting...

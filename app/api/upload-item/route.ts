@@ -69,20 +69,24 @@ export async function POST(req: Request) {
     publicUrls.push(data.publicUrl);
   }
 
-  const { error } = await supabase.from("items").insert({
-    user_id: user.id,
-    title,
-    description,
-    category,
-    city,
-    barangay,
-    images: publicUrls,
-  });
+  const { data: inserted, error } = await supabase
+    .from("items")
+    .insert({
+      user_id: user.id,
+      title,
+      description,
+      category,
+      city,
+      barangay,
+      images: publicUrls,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     await supabase.storage.from("items").remove(storagePaths);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "success" }, { status: 200 });
+  return NextResponse.json({ id: inserted.id }, { status: 200 });
 }
