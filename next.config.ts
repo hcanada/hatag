@@ -1,14 +1,17 @@
 import type { NextConfig } from "next";
 
+// Derive the image host from the Supabase URL so dev and prod each allow
+// their own project's storage without hardcoding project refs.
+const supabaseHost = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).hostname;
+
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "wvzctetqhvqohlxkhpxv.supabase.co",
-        port: "", // leave empty unless using a custom port
-        pathname: "/storage/v1/object/public/**", // optional, restrict to your bucket
+        hostname: supabaseHost,
+        port: "",
+        pathname: "/storage/v1/object/public/items/**",
       },
     ],
   },
